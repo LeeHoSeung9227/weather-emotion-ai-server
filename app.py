@@ -12,8 +12,8 @@ CORS(app)  # CORS 설정 추가
 print("AI 감정분석 모델 로딩 중...")
 
 # 감정 분석 파이프라인 로드 (서버 시작 시 한 번만)
-# 더 가볍고 효율적인 모델로 변경하여 메모리 사용량 감소
-classifier = pipeline("text-classification", model="monologg/koelectra-small-v3-sentiment")
+# 실제 존재하는 경량 모델로 변경
+classifier = pipeline("text-classification", model="daekeun-ml/koelectra-small-v3-nsmc")
 
 def analyze_emotion_with_ai(text):
     """AI 모델을 사용한 실제 감정분석"""
