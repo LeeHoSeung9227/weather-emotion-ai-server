@@ -13,5 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://dow
 # 5. 나머지 소스 코드를 복사합니다.
 COPY . .
 
-# 6. gunicorn을 사용하여 앱을 실행합니다. Railway는 PORT 환경변수를 자동으로 설정해줍니다.
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "app:app"] 
+# 6. gunicorn을 단일 워커로 실행하여 메모리 사용량을 최소화합니다.
+CMD ["gunicorn", "--workers", "1", "--bind", "0.0.0.0:$PORT", "app:app"] 

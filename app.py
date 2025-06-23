@@ -11,31 +11,15 @@ CORS(app)  # CORS 설정 추가
 # AI 모델 로드 (한번만 실행)
 print("AI 감정분석 모델 로딩 중...")
 
-# 한국어 감정분석 모델 (사전훈련된 AI 모델)
-try:
-    # 방법 1: 한국어 특화 감정분석 모델
-    model_name = "hun3359/klue-bert-base-sentiment"
-    sentiment_pipeline = pipeline(
-        "text-classification", 
-        model=model_name, 
-        tokenizer=model_name,
-        return_all_scores=True
-    )
-    print("한국어 BERT 모델 로드 완료!")
-except:
-    # 방법 2: 다국어 감정분석 모델 (백업)
-    print("한국어 모델 로드 실패, 다국어 모델 사용...")
-    sentiment_pipeline = pipeline(
-        "text-classification", 
-        model="cardiffnlp/twitter-xlm-roberta-base-sentiment",
-        return_all_scores=True
-    )
+# 감정 분석 파이프라인 로드 (서버 시작 시 한 번만)
+# 더 가볍고 효율적인 모델로 변경하여 메모리 사용량 감소
+classifier = pipeline("text-classification", model="monologg/koelectra-small-v3-sentiment")
 
 def analyze_emotion_with_ai(text):
     """AI 모델을 사용한 실제 감정분석"""
     try:
         # AI 모델로 감정 분석
-        results = sentiment_pipeline(text)
+        results = classifier(text)
         
         # 결과 처리
         if isinstance(results[0], list):
@@ -125,7 +109,7 @@ def enhance_korean_analysis(text, ai_result):
     }
 
 @app.route('/analyze', methods=['POST'])
-def analyze_sentiment():
+def analyze_emotion():
     """AI 기반 감정분석 API"""
     try:
         data = request.json
